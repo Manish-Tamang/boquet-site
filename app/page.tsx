@@ -1,12 +1,20 @@
-import { ProductCard } from "@/components/product-card"
-import { products } from "@/data/products"
-import Link from "next/link"
-import { BannerCarousel } from "@/components/banner-carousel"
+import { ProductCard } from "@/components/product-card";
+import Link from "next/link";
+import { BannerCarousel } from "@/components/banner-carousel";
+import { getProducts } from "@/lib/sanityDataFetching"; 
+import { SanityProduct } from "@/types";
 
-export default function Home() {
-  const featuredProducts = products.filter((product) => product.featured)
-  const tShirts = products.filter((product) => product.category === "t-shirts")
-  const hoodies = products.filter((product) => product.category === "hoodies")
+async function getStaticProducts() {
+  const products = await getProducts();
+  return products;
+}
+
+export default async function Home() {
+  const products = await getStaticProducts();
+
+  const featuredProducts = products.filter((product: SanityProduct) => product.featured);
+  const tShirts = products.filter((product: SanityProduct) => product.category?.name === "t-shirts");
+  const hoodies = products.filter((product: SanityProduct) => product.category?.name === "hoodies");
 
   return (
     <div>
@@ -20,8 +28,8 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {featuredProducts.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {featuredProducts.slice(0, 4).map((product: SanityProduct) => (
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
         </section>
@@ -37,10 +45,10 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {tShirts
-              .filter((p) => p.collection === "2025")
+              .filter((p: SanityProduct) => p.collection?.name === "2025")
               .slice(0, 4)
-              .map((product) => (
-                <ProductCard key={product.id} product={product} />
+              .map((product: SanityProduct) => (
+                <ProductCard key={product._id} product={product} />
               ))}
           </div>
         </section>
@@ -56,15 +64,14 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {hoodies
-              .filter((p) => p.collection === "winter")
+              .filter((p: SanityProduct) => p.collection?.name === "winter")
               .slice(0, 4)
-              .map((product) => (
-                <ProductCard key={product.id} product={product} />
+              .map((product: SanityProduct) => (
+                <ProductCard key={product._id} product={product} />
               ))}
           </div>
         </section>
       </div>
     </div>
-  )
+  );
 }
-
