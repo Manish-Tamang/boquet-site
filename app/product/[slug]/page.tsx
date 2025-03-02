@@ -1,41 +1,59 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useParams } from "next/navigation"
-import { products } from "@/data/products"
-import { ProductGallery } from "@/components/product-gallery"
-import { Button } from "@/components/ui/button"
-import { Minus, Plus } from "lucide-react"
-import { useCart } from "@/context/cart-context"
-import { notFound } from "next/navigation"
+import { useState } from "react";
+import { useParams } from "next/navigation";
+import { ProductGallery } from "@/components/product-gallery";
+import { Button } from "@/components/ui/button";
+import { Minus, Plus } from "lucide-react";
+import { useCart } from "@/context/cart-context";
+import { notFound } from "next/navigation";
+import { SanityProduct } from "@/types";
+import { sanityFetch } from "@/sanity/lib/live";
+import { productBySlugQuery } from "@/sanity/lib/queries";
 
-export default function ProductPage() {
-  const params = useParams()
-  const slug = params.slug as string
+interface ProductPageProps {
+  params: { slug: string };
+}
 
-  const product = products.find((p) => p.slug === slug)
+async function getProduct(slug: string): Promise<SanityProduct | undefined> {
+  try {
+    const product = await sanityFetch<SanityProduct>({
+      query: productBySlugQuery,
+      params: { slug },
+      tags: [`product:${slug}`]
+    });
+    return product;
+  } catch (error) {
+    console.error("Error fetching product by slug:", error);
+    return undefined;
+  }
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
+  const slug = params.slug as string;
+  const product = await getProduct(slug);
 
   if (!product) {
-    notFound()
+    notFound();
   }
 
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0].name)
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0].name)
-  const [quantity, setQuantity] = useState(1)
+  const [selectedVariant, setSelectedVariant] = useState(product.variants[0].name);
+  const [selectedSize, setSelectedSize] = useState(product.sizes[0].name);
+  const [quantity, setQuantity] = useState(1);
 
-  const { addToCart } = useCart()
+  const { addToCart } = useCart();
 
   const handleAddToCart = () => {
     addToCart({
-      id: product.id,
+      id: product._id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: product.images[0].asset.url, // Adjust according to your Sanity image setup
       quantity,
       variant: selectedVariant,
       size: selectedSize,
-    })
-  }
+    });
+  };
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 py-8">
@@ -186,6 +204,5 @@ export default function ProductPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
