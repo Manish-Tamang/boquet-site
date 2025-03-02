@@ -1,17 +1,18 @@
-import Image from "next/image"
-import Link from "next/link"
-import type { Product } from "@/data/products"
+import Image from "next/image";
+import Link from "next/link";
+import { SanityProduct } from "@/types";
+import { urlFor } from "@/sanity/lib/image";
 
 interface ProductCardProps {
-  product: Product
+  product: SanityProduct;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Link href={`/product/${product.slug}`} className="group">
+    <Link href={`/product/${product.slug.current}`} className="group">
       <div className="aspect-square overflow-hidden rounded-md bg-muted">
         <Image
-          src={product.images[0] || "/placeholder.svg"}
+          src={urlFor(product.images[0]).url() || "/placeholder.svg"} 
           alt={product.name}
           width={300}
           height={300}
@@ -23,6 +24,5 @@ export function ProductCard({ product }: ProductCardProps) {
         <p className="mt-1 font-medium">₹{product.price.toLocaleString()}</p>
       </div>
     </Link>
-  )
+  );
 }
-
