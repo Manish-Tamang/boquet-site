@@ -1,4 +1,3 @@
-// components/client-banner-carousel.tsx
 "use client";
 
 import * as React from "react";
@@ -16,7 +15,6 @@ interface BannerCarouselProps {
 
 const ClientBannerCarousel: React.FC<BannerCarouselProps> = ({ slides }) => {
     const [plugin] = React.useState(() => Autoplay({ delay: 5000, stopOnInteraction: false }));
-    console.log("Slides data:", slides);
 
     return (
         <div className="w-full overflow-hidden bg-muted">
@@ -31,7 +29,7 @@ const ClientBannerCarousel: React.FC<BannerCarouselProps> = ({ slides }) => {
                 <CarouselContent>
                     {slides.map((slide, index) => (
                         <CarouselItem key={index} className="relative pl-0">
-                            <div className="relative aspect-[2.5/1] w-full overflow-hidden">
+                            <div className="relative aspect-[3/1] w-full overflow-hidden">
                                 <Image
                                     src={urlFor(slide.image).url() || "/placeholder.svg"}
                                     alt={slide.title}
@@ -41,13 +39,13 @@ const ClientBannerCarousel: React.FC<BannerCarouselProps> = ({ slides }) => {
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-background/20">
-                                    <div className="container h-full max-w-[1280px] mx-auto px-4 flex items-center">
-                                        <div className="max-w-lg space-y-4">
-                                            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
+                                    <div className="container h-full mx-auto px-4 flex items-center">
+                                        <div className="max-w-md space-y-3">
+                                            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                                                 {slide.title}
                                             </h1>
-                                            <p className="text-muted-foreground md:text-xl">{slide.subtitle}</p>
-                                            <Button asChild size="lg">
+                                            <p className="text-muted-foreground text-sm md:text-base">{slide.subtitle}</p>
+                                            <Button asChild size="sm">
                                                 <Link href={slide.ctaLink || "/"}>{slide.ctaText}</Link>
                                             </Button>
                                         </div>

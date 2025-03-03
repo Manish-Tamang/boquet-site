@@ -1,205 +1,156 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useParams, notFound } from "next/navigation";
 import { ProductGallery } from "@/components/product-gallery";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 import { useCart } from "@/context/cart-context";
-import { notFound } from "next/navigation";
-import { SanityProduct } from "@/types";
-import { sanityFetch } from "@/sanity/lib/live";
-import { productBySlugQuery } from "@/sanity/lib/queries";
+import { SanityProduct, SanitySize, SanityVariant } from "@/types";
+import { bouquetBySlugQuery } from "@/sanity/lib/queries";
+import { client } from "@/sanity/lib/client";
 
-interface ProductPageProps {
-  params: { slug: string };
-}
-
-async function getProduct(slug: string): Promise<SanityProduct | undefined> {
-  try {
-    const product = await sanityFetch<SanityProduct>({
-      query: productBySlugQuery,
-      params: { slug },
-      tags: [`product:${slug}`]
-    });
-    return product;
-  } catch (error) {
-    console.error("Error fetching product by slug:", error);
-    return undefined;
-  }
-}
-
-export default async function ProductPage({ params }: ProductPageProps) {
-  const slug = params.slug as string;
-  const product = await getProduct(slug);
-
-  if (!product) {
-    notFound();
-  }
-
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0].name);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0].name);
-  const [quantity, setQuantity] = useState(1);
-
+export default function ProductPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const [product, setProduct] = useState<SanityProduct | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedVariant, setSelectedVariant] = useState<SanityVariant | null>(null);
+  const [selectedSize, setSelectedSize] = useState<SanitySize | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
   const { addToCart } = useCart();
 
+  useEffect(() => {
+    const getBouquet = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const productData = await client.fetch<SanityProduct>(bouquetBySlugQuery, { slug });
+        if (productData) {
+          setProduct(productData);
+          setSelectedVariant(productData.variants?.[0] ?? null);
+          setSelectedSize(productData.sizes?.[0] ?? "");
+        } else {
+          notFound();
+        }
+      } catch (error: any) {
+        setError(error.message || "Failed to fetch bouquet");
+        console.error("Error fetching bouquet:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) getBouquet();
+  }, [slug]);
+
   const handleAddToCart = () => {
+    if (!product) return;
+
     addToCart({
       id: product._id,
       name: product.name,
       price: product.price,
-      image: product.images[0].asset.url, // Adjust according to your Sanity image setup
+      image: (product.images?.[0] as any)?.asset?.url ?? "",
       quantity,
-      variant: selectedVariant,
-      size: selectedSize,
+      variant: selectedVariant?.name ?? "",
+      size: typeof selectedSize === "string" ? selectedSize : selectedSize?.name ?? "",
     });
   };
 
+  if (loading) {
+    return <div>Loading bouquet...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!product) {
+    return notFound();
+  }
+
   return (
-    <div className="max-w-[1280px] mx-auto px-4 py-8">
-      <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
-        <ProductGallery images={product.images} name={product.name} />
+    <div className="max-w-[1024px] mx-auto px-2 py-4"> { }
+      <div className="grid md:grid-cols-2 gap-4"> { }
+        <ProductGallery images={product.images ?? []} name={product.name} />
 
-        <div className="space-y-6">
-          <h1 className="text-3xl font-bold">{product.name}</h1>
-          <p className="text-2xl font-bold">₹{product.price.toLocaleString()}</p>
-          <p className="text-sm text-muted-foreground">Shipping is calculated at checkout</p>
+        <div className="space-y-3"> { }
+          <h1 className="text-2xl font-bold">{product.name}</h1> { }
+          <p className="text-xl font-bold">₹{product.price.toLocaleString()}</p> { }
+          <p className="text-xs text-muted-foreground">Shipping calculated at checkout</p> { }
 
-          <div className="space-y-4">
+          <div className="space-y-2"> { }
             <div>
-              <h3 className="font-medium mb-2">Choose Variant</h3>
-              <div className="flex flex-wrap gap-2">
-                {product.variants.map((variant) => (
+              <h3 className="font-medium mb-1 text-sm">Variant</h3> { }
+              <div className="flex flex-wrap gap-1"> { }
+                {product.variants?.map((variant) => (
                   <Button
-                    key={variant.name}
+                    key={variant._id}
                     type="button"
-                    variant={selectedVariant === variant.name ? "default" : "outline"}
-                    className="rounded-md"
-                    disabled={!variant.inStock}
-                    onClick={() => setSelectedVariant(variant.name)}
+                    variant={selectedVariant?._id === variant._id ? "default" : "outline"}
+                    className="rounded-md text-xs px-2 py-1"
+                    onClick={() => setSelectedVariant(variant)}
                   >
-                    {variant.name}
+                    {variant}
                   </Button>
-                ))}
+                )) ?? <p className="text-xs">No variants</p>} { }
               </div>
             </div>
 
             <div>
-              <h3 className="font-medium mb-2">Choose Size</h3>
-              <div className="flex flex-wrap gap-2">
-                {product.sizes.map((size) => (
+              <h3 className="font-medium mb-1 text-sm">Size</h3> { }
+              <div className="flex flex-wrap gap-1"> { }
+                {product.sizes?.map((size) => (
                   <Button
-                    key={size.name}
+                    key={size.toString()}
                     type="button"
-                    variant={selectedSize === size.name ? "default" : "outline"}
-                    className="rounded-md w-12"
-                    disabled={!size.inStock}
-                    onClick={() => setSelectedSize(size.name)}
+                    variant={selectedSize === size ? "default" : "outline"}
+                    className="rounded-md w-8 text-xs px-1 py-0.5"
+                    onClick={() => setSelectedSize(size)}
                   >
-                    {size.name}
+                    {size.toString()}
                   </Button>
-                ))}
+                )) ?? <p className="text-xs">No sizes</p>} { }
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2"> { }
               <div className="flex items-center border rounded-md">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-none"
+                  className="h-8 w-8 rounded-none p-1"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   disabled={quantity <= 1}
                 >
-                  <Minus className="h-4 w-4" />
+                  <Minus className="h-3 w-3" /> { }
                 </Button>
-                <span className="w-10 text-center">{quantity}</span>
+                <span className="w-8 text-center text-sm">{quantity}</span> { }
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-none"
+                  className="h-8 w-8 rounded-none p-1"
                   onClick={() => setQuantity(quantity + 1)}
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus className="h-3 w-3" /> { }
                 </Button>
               </div>
 
-              <Button className="flex-1" size="lg" onClick={handleAddToCart}>
+              <Button className="flex-1 text-sm" size="sm" onClick={handleAddToCart}> { }
                 Add to cart
               </Button>
             </div>
           </div>
 
-          <div className="pt-6 border-t">
-            <h3 className="font-medium mb-2">Description</h3>
-            <p className="text-muted-foreground">{product.description}</p>
+          <div className="pt-3 border-t"> { }
+            <h3 className="font-medium mb-1 text-sm">Description</h3> { }
+            <p className="text-xs text-muted-foreground">{product.description ?? "No description"}</p> { }
           </div>
 
-          <div className="pt-6 border-t">
-            <h3 className="font-medium mb-2">DISCLAIMER: GARMENT SIZE REDUCE AFTER FIRST WASH</h3>
-            <ul className="list-disc pl-5 space-y-1">
-              {product.details.map((detail, index) => (
-                <li key={index}>{detail}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Size Chart */}
-          <div className="pt-6 border-t">
-            <h3 className="font-medium mb-4">Oversized T-Shirt</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full border-collapse">
-                <thead>
-                  <tr className="border-b">
-                    <th className="py-2 px-4 text-left">WASTRA.</th>
-                    <th className="py-2 px-4 text-center">
-                      Small
-                      <br />
-                      (Inches)
-                    </th>
-                    <th className="py-2 px-4 text-center">
-                      Medium
-                      <br />
-                      (Inches)
-                    </th>
-                    <th className="py-2 px-4 text-center">
-                      Large
-                      <br />
-                      (Inches)
-                    </th>
-                    <th className="py-2 px-4 text-center">
-                      XL
-                      <br />
-                      (Inches)
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b">
-                    <td className="py-2 px-4 font-medium">Length</td>
-                    <td className="py-2 px-4 text-center">25</td>
-                    <td className="py-2 px-4 text-center">26</td>
-                    <td className="py-2 px-4 text-center">27</td>
-                    <td className="py-2 px-4 text-center">28</td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="py-2 px-4 font-medium">Chest</td>
-                    <td className="py-2 px-4 text-center">39</td>
-                    <td className="py-2 px-4 text-center">41</td>
-                    <td className="py-2 px-4 text-center">43</td>
-                    <td className="py-2 px-4 text-center">45</td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="py-2 px-4 font-medium">Sleeve</td>
-                    <td className="py-2 px-4 text-center">7</td>
-                    <td className="py-2 px-4 text-center">7.5</td>
-                    <td className="py-2 px-4 text-center">8</td>
-                    <td className="py-2 px-4 text-center">8.5</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p className="text-sm text-center mt-2">*Size are valued after first wash*</p>
+          <div className="pt-3 border-t"> { }
+            <h3 className="font-medium mb-1 text-sm">Details</h3> { }
+            <p className="text-xs text-muted-foreground">{product.arrangementDetails ?? "No details"}</p> { }
           </div>
         </div>
       </div>

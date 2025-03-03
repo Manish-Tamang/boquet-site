@@ -1,10 +1,16 @@
 import { type SchemaTypeDefinition } from "sanity";
-import product from "./product";
-import category from "./category";
-import collection from "./collection";
+import bouquet from "./bouquet";
+import bouquetCategory from "./bouquetCategory";
+import seasonalCollection from "./seasonalCollection";
 import siteSettings from "./siteSettings";
-import heroSection from "./heroSection";
+import bouquetHeroSection from "./bouquetHeroSection";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [product, category, collection, siteSettings, heroSection],
+  types: [
+    bouquet,
+    bouquetCategory,
+    seasonalCollection,
+    siteSettings,
+    bouquetHeroSection,
+  ],
 };

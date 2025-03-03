@@ -9,7 +9,7 @@ export default function AboutPage() {
 
         <div className="aspect-video overflow-hidden rounded-lg mb-8">
           <img
-            src="/placeholder.svg?height=720&width=1280"
+            src="/images/banner.jpeg"
             alt="BlossomCart Floral Shop"
             className="w-full h-full object-cover"
           />

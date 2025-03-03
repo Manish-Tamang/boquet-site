@@ -1,28 +1,26 @@
 import type { StructureResolver } from "sanity/structure";
-import {
-  PackageIcon,
-  ShoppingBag,
-  Tag,
-  Cog,
-  LayoutDashboard,
-} from "lucide-react";
+import { FlowerIcon, Tag, Leaf, Cog, LayoutDashboard } from "lucide-react";
 
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title("Content")
+    .title("Bouquet Shop Content")
     .items([
       S.listItem()
-        .title("Products")
-        .icon(ShoppingBag)
-        .child(S.documentTypeList("product").title("Products")),
+        .title("Bouquets")
+        .icon(FlowerIcon)
+        .child(S.documentTypeList("bouquet").title("Bouquets")),
       S.listItem()
-        .title("Categories")
+        .title("Bouquet Categories")
         .icon(Tag)
-        .child(S.documentTypeList("category").title("Categories")),
+        .child(
+          S.documentTypeList("bouquetCategory").title("Bouquet Categories")
+        ),
       S.listItem()
-        .title("Collections")
-        .icon(PackageIcon)
-        .child(S.documentTypeList("collection").title("Collections")),
+        .title("Seasonal Collections")
+        .icon(Leaf)
+        .child(
+          S.documentTypeList("seasonalCollection").title("Seasonal Collections")
+        ),
       S.listItem()
         .title("Site Settings")
         .icon(Cog)
@@ -30,19 +28,21 @@ export const structure: StructureResolver = (S) =>
           S.document().schemaType("siteSettings").documentId("siteSettings")
         ),
       S.listItem()
-        .title("Hero Section")
+        .title("Bouquet Hero Section")
         .icon(LayoutDashboard)
         .child(
-          S.document().schemaType("heroSection").documentId("heroSection")
+          S.document()
+            .schemaType("bouquetHeroSection")
+            .documentId("bouquetHeroSection")
         ),
       ...S.documentTypeListItems().filter(
         (listItem) =>
           ![
-            "product",
-            "category",
-            "collection",
+            "bouquet",
+            "bouquetCategory",
+            "seasonalCollection",
             "siteSettings",
-            "heroSection",
+            "bouquetHeroSection",
           ].includes(listItem.getId() ?? "")
       ),
     ]);

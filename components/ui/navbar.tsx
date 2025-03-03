@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { Search, ShoppingCart } from "lucide-react"
+import * as React from "react";
+import Link from "next/link";
+import { Search, ShoppingCart } from "lucide-react";
 
 import {
   NavigationMenu,
@@ -12,93 +12,117 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { useCart } from "@/context/cart-context"
-import { CartItem } from "@/components/cart-item"
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useCart } from "@/context/cart-context";
+import { CartItem } from "@/components/cart-item";
 
 export function Navbar() {
-  const { cart, totalItems, totalPrice } = useCart()
-  const [searchOpen, setSearchOpen] = React.useState(false)
+  const { cart, totalItems, totalPrice } = useCart();
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4 max-w-[1280px] mx-auto">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <span className="font-bold text-xl">WASTRA</span>
+          <span className="font-bold text-xl">Bouquet Bliss</span> {/* Updated brand name */}
         </Link>
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
               <Link href="/" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Home
+                </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>T-Shirts</NavigationMenuTrigger>
+              <NavigationMenuTrigger>Rose Bouquets</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  <ListItem href="/category/t-shirts" title="All T-Shirts">
-                    Browse our complete collection of t-shirts
+                  <ListItem href="/category/rose-bouquets" title="All Rose Bouquets">
+                    Browse our complete collection of rose bouquets
                   </ListItem>
-                  <ListItem href="/category/t-shirts?collection=2025" title="2025 Collection">
-                    Our latest designs for the upcoming season
+                  <ListItem
+                    href="/category/rose-bouquets?collection=spring"
+                    title="Spring Collection"
+                  >
+                    Fresh and vibrant rose arrangements for spring
                   </ListItem>
-                  <ListItem href="/category/t-shirts?style=oversized" title="Oversized">
-                    Comfortable oversized fits for everyday wear
+                  <ListItem
+                    href="/category/rose-bouquets?style=classic"
+                    title="Classic"
+                  >
+                    Timeless rose bouquet designs
                   </ListItem>
-                  <ListItem href="/category/t-shirts?style=graphic" title="Graphic Tees">
-                    Bold designs and eye-catching graphics
+                  <ListItem
+                    href="/category/rose-bouquets?style=luxury"
+                    title="Luxury"
+                  >
+                    Premium rose bouquets for special occasions
                   </ListItem>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Hoodies</NavigationMenuTrigger>
+              <NavigationMenuTrigger>Sunflower Arrangements</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  <ListItem href="/category/hoodies" title="All Hoodies">
-                    Stay warm with our premium hoodie collection
+                  <ListItem href="/category/sunflower-bouquets" title="All Sunflower Arrangements">
+                    Explore our sunny sunflower bouquet collection
                   </ListItem>
-                  <ListItem href="/category/hoodies?collection=winter" title="Winter Collection">
-                    Designed for the coldest months
+                  <ListItem
+                    href="/category/sunflower-bouquets?collection=summer"
+                    title="Summer Collection"
+                  >
+                    Bright and cheerful arrangements for summer
                   </ListItem>
-                  <ListItem href="/category/hoodies?style=oversized" title="Oversized">
-                    Roomy and comfortable oversized hoodies
+                  <ListItem
+                    href="/category/sunflower-bouquets?style=rustic"
+                    title="Rustic"
+                  >
+                    Natural, countryside-inspired designs
                   </ListItem>
-                  <ListItem href="/category/hoodies?style=basic" title="Basic">
-                    Simple, clean designs for everyday wear
+                  <ListItem
+                    href="/category/sunflower-bouquets?style=modern"
+                    title="Modern"
+                  >
+                    Sleek and contemporary sunflower bouquets
                   </ListItem>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Accessories</NavigationMenuTrigger>
+              <NavigationMenuTrigger>Gift Add-Ons</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  <ListItem href="/category/accessories" title="All Accessories">
-                    Complete your look with our accessories
+                  <ListItem href="/category/add-ons" title="All Gift Add-Ons">
+                    Enhance your bouquet with our add-ons
                   </ListItem>
-                  <ListItem href="/category/accessories?type=caps" title="Caps">
-                    Stylish headwear for any occasion
+                  <ListItem href="/category/add-ons?type=chocolates" title="Chocolates">
+                    Sweet treats to pair with your flowers
                   </ListItem>
-                  <ListItem href="/category/accessories?type=bags" title="Bags">
-                    Functional and fashionable bags
+                  <ListItem href="/category/add-ons?type=cards" title="Greeting Cards">
+                    Personalize your gift with a card
                   </ListItem>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/ask-us" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Ask Us</NavigationMenuLink>
+              <Link href="/contact" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Contact
+                </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/about" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  About
+                </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
@@ -108,7 +132,7 @@ export function Navbar() {
             <div className="relative">
               <Input
                 className="w-[200px] md:w-[300px]"
-                placeholder="Search products..."
+                placeholder="Search bouquets..."
                 autoFocus
                 onBlur={() => setSearchOpen(false)}
               />
@@ -141,7 +165,7 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent className="w-full sm:max-w-md">
               <div className="flex flex-col h-full">
-                <h2 className="font-semibold text-lg">Shopping Cart</h2>
+                <h2 className="font-semibold text-lg">Bouquet Cart</h2>
                 {cart.length === 0 ? (
                   <div className="flex-1 flex items-center justify-center">
                     <div className="text-center">
@@ -156,7 +180,10 @@ export function Navbar() {
                   <>
                     <div className="flex-1 overflow-auto py-4">
                       {cart.map((item) => (
-                        <CartItem key={`${item.id}-${item.variant}-${item.size}`} item={item} />
+                        <CartItem
+                          key={`${item.id}-${item.variant}-${item.size}`}
+                          item={item}
+                        />
                       ))}
                     </div>
                     <div className="border-t pt-4">
@@ -181,29 +208,31 @@ export function Navbar() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a"> & { title: string }>(
-  ({ className, title, children, ...props }, ref) => {
-    return (
-      <li>
-        <NavigationMenuLink asChild>
-          <a
-            ref={ref}
-            className={cn(
-              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-              className,
-            )}
-            {...props}
-          >
-            <div className="text-sm font-medium leading-none">{title}</div>
-            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
-          </a>
-        </NavigationMenuLink>
-      </li>
-    )
-  },
-)
-ListItem.displayName = "ListItem"
-
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a"> & { title: string }
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";

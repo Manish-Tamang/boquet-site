@@ -1,18 +1,18 @@
 import { groq } from "next-sanity";
 
-export const productQuery = groq`*[_type == "product"]{
+export const bouquetQuery = groq`*[_type == "bouquet"]{
     _id,
     name,
     slug { current },
     images,
     price,
     description,
-    details,
-    category -> {
+    arrangementDetails,
+    bouquetCategory -> {
         _id,
         name
     },
-    collection -> {
+    seasonalCollection -> {
         _id,
         name
     },
@@ -21,19 +21,19 @@ export const productQuery = groq`*[_type == "product"]{
     featured
 }`;
 
-export const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0]{
+export const bouquetBySlugQuery = groq`*[_type == "bouquet" && slug.current == $slug][0]{
     _id,
     name,
     slug { current },
     images,
     price,
     description,
-    details,
-    category -> {
+    arrangementDetails,
+    bouquetCategory -> {
         _id,
         name
     },
-    collection -> {
+    seasonalCollection -> {
         _id,
         name
     },
@@ -42,13 +42,13 @@ export const productBySlugQuery = groq`*[_type == "product" && slug.current == $
     featured
 }`;
 
-export const allCategoriesQuery = groq`*[_type == "category"]{
+export const allBouquetCategoriesQuery = groq`*[_type == "bouquetCategory"]{
     _id,
     name,
     description
 }`;
 
-export const allCollectionsQuery = groq`*[_type == "collection"]{
+export const allSeasonalCollectionsQuery = groq`*[_type == "seasonalCollection"]{
     _id,
     name,
     description
@@ -60,7 +60,7 @@ export const siteSettingsQuery = groq`*[_type == "siteSettings" && _id == "siteS
     footerText
 }`;
 
-export const heroSectionQuery = groq`*[_type == "heroSection" && _id == "heroSection"][0]{
+export const bouquetHeroSectionQuery = groq`*[_type == "bouquetHeroSection" && _id == "bouquetHeroSection"][0]{
     slides[]{
         image,
         title,

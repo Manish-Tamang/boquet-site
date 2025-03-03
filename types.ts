@@ -11,6 +11,9 @@ export interface CartItemType {
 }
 
 export interface SanityProduct {
+  [x: string]: string;
+  bouquetCategory: any;
+  seasonalCollection: any;
   _id: string;
   name: string;
   slug: { current: string };
@@ -38,6 +41,7 @@ export interface SanityCollection {
 }
 
 export interface SanityVariant {
+  [x: string]: Key | null | undefined;
   name: string;
   inStock: boolean;
 }

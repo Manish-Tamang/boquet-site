@@ -1,56 +1,91 @@
-"use client"
+"use client";
 
-import { useParams, useSearchParams } from "next/navigation"
-import { products } from "@/data/products"
-import { ProductCard } from "@/components/product-card"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { useState, useEffect } from "react"
+import { useParams, useSearchParams } from "next/navigation";
+import { ProductCard } from "@/components/product-card";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { useState, useEffect } from "react";
+import { SanityProduct } from "@/types";
+import { bouquetQuery } from "@/sanity/lib/queries";
+import { client } from "@/sanity/lib/client";
 
 export default function CategoryPage() {
-  const params = useParams()
-  const searchParams = useSearchParams()
-  const category = params.category as string
-  const collectionParam = searchParams.get("collection")
-  const styleParam = searchParams.get("style")
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const category = params.category as string;
+  const collectionParam = searchParams.get("collection");
 
-  const [filteredProducts, setFilteredProducts] = useState(products)
-  const [collections, setCollections] = useState<string[]>(collectionParam ? [collectionParam] : [])
-  const [styles, setStyles] = useState<string[]>(styleParam ? [styleParam] : [])
+  const [filteredBouquets, setFilteredBouquets] = useState<SanityProduct[]>([]);
+  const [allBouquets, setAllBouquets] = useState<SanityProduct[]>([]);
+  const [collections, setCollections] = useState<string[]>(collectionParam ? [collectionParam] : []);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Filter products based on category, collection, and style
+  // Fetch bouquets from Sanity
   useEffect(() => {
-    let result = products
+    const fetchBouquets = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await client.fetch<SanityProduct[]>(bouquetQuery);
+        setAllBouquets(data);
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch bouquets");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBouquets();
+  }, []);
+
+  // Filter bouquets based on category and collection
+  useEffect(() => {
+    let result = allBouquets;
 
     // Filter by category
     if (category !== "all") {
-      result = result.filter((product) => product.category === category)
+      result = result.filter((bouquet) => bouquet.bouquetCategory?.name.toLowerCase().replace(" ", "-") === category);
     }
 
     // Filter by collection
     if (collections.length > 0) {
-      result = result.filter((product) => collections.includes(product.collection))
+      result = result.filter((bouquet) => collections.includes(bouquet.seasonalCollection?.name || ""));
     }
 
-    // Filter by style (this would need to be added to the product data model)
-    // For now, we'll just use it as a placeholder
-
-    setFilteredProducts(result)
-  }, [category, collections])
+    setFilteredBouquets(result);
+  }, [category, collections, allBouquets]);
 
   // Get unique collections for the current category
   const availableCollections = [
-    ...new Set(products.filter((p) => category === "all" || p.category === category).map((p) => p.collection)),
-  ]
+    ...new Set(
+      allBouquets
+        .filter((b) => category === "all" || b.bouquetCategory?.name.toLowerCase().replace(" ", "-") === category)
+        .map((b) => b.seasonalCollection?.name)
+        .filter(Boolean) // Remove null/undefined
+    ),
+  ] as string[];
 
   const handleCollectionChange = (collection: string) => {
-    setCollections((prev) => (prev.includes(collection) ? prev.filter((c) => c !== collection) : [...prev, collection]))
+    setCollections((prev) =>
+      prev.includes(collection) ? prev.filter((c) => c !== collection) : [...prev, collection]
+    );
+  };
+
+  if (loading) {
+    return <div className="max-w-[1280px] mx-auto px-4 py-8">Loading bouquets...</div>;
+  }
+
+  if (error) {
+    return <div className="max-w-[1280px] mx-auto px-4 py-8">Error: {error}</div>;
   }
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 capitalize">{category === "all" ? "All Products" : category}</h1>
+      <h1 className="text-3xl font-bold mb-8 capitalize">
+        {category === "all" ? "All Bouquets" : category.replace("-", " ")}
+      </h1>
 
       <div className="grid md:grid-cols-[250px_1fr] gap-8">
         {/* Filters */}
@@ -76,39 +111,68 @@ export default function CategoryPage() {
           <div>
             <h3 className="font-medium mb-4">Price Range</h3>
             <div className="grid grid-cols-2 gap-4">
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setFilteredBouquets(allBouquets.filter((b) => b.price < 2000))
+                }
+              >
                 Under ₹2000
               </Button>
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setFilteredBouquets(
+                    allBouquets.filter((b) => b.price >= 2000 && b.price <= 3000)
+                  )
+                }
+              >
                 ₹2000-₹3000
               </Button>
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setFilteredBouquets(
+                    allBouquets.filter((b) => b.price >= 3000 && b.price <= 4000)
+                  )
+                }
+              >
                 ₹3000-₹4000
               </Button>
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setFilteredBouquets(allBouquets.filter((b) => b.price > 4000))
+                }
+              >
                 Over ₹4000
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Products Grid */}
+        {/* Bouquets Grid */}
         <div>
-          {filteredProducts.length === 0 ? (
+          {filteredBouquets.length === 0 ? (
             <div className="text-center py-12">
-              <h3 className="text-lg font-medium">No products found</h3>
-              <p className="text-muted-foreground mt-2">Try changing your filters or check back later.</p>
+              <h3 className="text-lg font-medium">No bouquets found</h3>
+              <p className="text-muted-foreground mt-2">
+                Try adjusting your filters or check back later.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {filteredBouquets.map((bouquet) => (
+                <ProductCard key={bouquet._id} product={bouquet} />
               ))}
             </div>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
-

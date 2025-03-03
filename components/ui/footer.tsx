@@ -1,4 +1,3 @@
-// components/ui/footer.tsx
 import Link from "next/link";
 import { sanityFetch } from "@/sanity/lib/live";
 import { siteSettingsQuery } from "@/sanity/lib/queries";
@@ -7,12 +6,12 @@ import { urlFor } from "@/sanity/lib/image";
 
 async function getSiteSettings(): Promise<SanitySiteSettings | null> {
   try {
-    const settings = await sanityFetch<SanitySiteSettings>({
+    const settings = await sanityFetch({
       query: siteSettingsQuery,
-      tags: ['siteSettings'],
+      tags: ["siteSettings"],
     });
 
-    return settings;
+    return settings.data;
   } catch (error) {
     console.error("Error fetching site settings:", error);
     return null;
@@ -27,25 +26,38 @@ export async function Footer() {
       <div className="max-w-[1280px] mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-semibold text-lg mb-4">{siteSettings?.siteName || "WASTRA"}</h3>
-            <p className="text-muted-foreground">Premium quality clothing made in Nepal with 100% Terry Cotton.</p>
+            <h3 className="font-semibold text-lg mb-4">
+              {siteSettings?.siteName || "Bouquet Bliss"}
+            </h3>
+            <p className="text-muted-foreground">
+              Beautifully crafted bouquets made with fresh, hand-picked flowers.
+            </p>
           </div>
           <div>
             <h3 className="font-semibold text-lg mb-4">Shop</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/category/t-shirts" className="text-muted-foreground hover:text-foreground">
-                  T-Shirts
+                <Link
+                  href="/category/rose-bouquets"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Rose Bouquets
                 </Link>
               </li>
               <li>
-                <Link href="/category/hoodies" className="text-muted-foreground hover:text-foreground">
-                  Hoodies
+                <Link
+                  href="/category/sunflower-bouquets"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Sunflower Arrangements
                 </Link>
               </li>
               <li>
-                <Link href="/category/accessories" className="text-muted-foreground hover:text-foreground">
-                  Accessories
+                <Link
+                  href="/category/add-ons"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Gift Add-Ons
                 </Link>
               </li>
             </ul>
@@ -59,7 +71,7 @@ export async function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/ask-us" className="text-muted-foreground hover:text-foreground">
+                <Link href="/contact" className="text-muted-foreground hover:text-foreground">
                   Contact
                 </Link>
               </li>
@@ -97,7 +109,10 @@ export async function Footer() {
           </div>
         </div>
         <div className="border-t mt-10 pt-6 text-center text-muted-foreground">
-          <p>© {new Date().getFullYear()} {siteSettings?.siteName || "BlossomCart"}. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} {siteSettings?.siteName || "Bouquet Bliss"}. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>
