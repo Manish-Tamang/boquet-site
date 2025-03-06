@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <div>
       <BannerCarousel />
-      <div className="max-w-[1280px] mx-auto px-4 py-6">
+      <div className="w-[1280px] mx-auto px-4 py-6">
         <section className="py-8">
           <div className="flex justify-between mb-6">
             <h2 className="text-xl font-bold">Featured Bouquets</h2>
