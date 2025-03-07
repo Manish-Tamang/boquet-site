@@ -5,9 +5,12 @@ import "./globals.css"
 import { Navbar } from "@/components/ui/navbar"
 import { Footer } from "@/components/ui/footer"
 import { CartProvider } from "@/context/cart-context"
-import { ProgressBar } from "@/components/ui/progress-bar"
 
-const inter = Inter({ subsets: ["latin"] })
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: 'swap', // Optional: Improves performance 
+})
 
 export const metadata: Metadata = {
   title: "BlossomCart - Elegant Bouquets for Every Occasion",
@@ -24,9 +27,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <CartProvider>
           <div className="flex min-h-screen flex-col">
-            <ProgressBar />
             <Navbar />
-            <main className="flex-1">{children}</main>
+            <div className="max-w-4xl mx-auto" >
+              <main className="flex-1">{children}</main>
+            </div>
             <Footer />
           </div>
         </CartProvider>
@@ -34,7 +38,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-
-import './globals.css'
