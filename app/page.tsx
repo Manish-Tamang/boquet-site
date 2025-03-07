@@ -33,13 +33,13 @@ export default function Home() {
     fetchBouquets();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <BannerCarousel />
-      <div className="w-[1280px] mx-auto px-4 py-6">
+    <div  >
+      <BannerCarousel /> { }
+      <div>
         <section className="py-8">
           <div className="flex justify-between mb-6">
             <h2 className="text-xl font-bold">Featured Bouquets</h2>
