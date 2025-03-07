@@ -86,9 +86,7 @@ export default function CategoryPage() {
       <h1 className="text-3xl font-bold mb-8 capitalize">
         {category === "all" ? "All Bouquets" : category.replace("-", " ")}
       </h1>
-
       <div className="grid md:grid-cols-[250px_1fr] gap-8">
-        {/* Filters */}
         <div className="space-y-6">
           <div>
             <h3 className="font-medium mb-4">Collections</h3>
@@ -118,7 +116,7 @@ export default function CategoryPage() {
                   setFilteredBouquets(allBouquets.filter((b) => b.price < 2000))
                 }
               >
-                Under ₹2000
+                Under रु2000
               </Button>
               <Button
                 variant="outline"
@@ -129,7 +127,7 @@ export default function CategoryPage() {
                   )
                 }
               >
-                ₹2000-₹3000
+                रु2000-रु3000
               </Button>
               <Button
                 variant="outline"
@@ -140,7 +138,7 @@ export default function CategoryPage() {
                   )
                 }
               >
-                ₹3000-₹4000
+                रु3000-रु4000
               </Button>
               <Button
                 variant="outline"
@@ -149,13 +147,11 @@ export default function CategoryPage() {
                   setFilteredBouquets(allBouquets.filter((b) => b.price > 4000))
                 }
               >
-                Over ₹4000
+                Over रु4000
               </Button>
             </div>
           </div>
         </div>
-
-        {/* Bouquets Grid */}
         <div>
           {filteredBouquets.length === 0 ? (
             <div className="text-center py-12">
