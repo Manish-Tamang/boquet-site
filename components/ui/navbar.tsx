@@ -25,22 +25,15 @@ export function Navbar() {
   const [searchOpen, setSearchOpen] = React.useState(false);
 
   return (
-    <div className="border-b">
-      <div className="flex h-16 items-center px-4 max-w-[1280px] mx-auto">
+    <div className="border-b sticky top-0 z-50 bg-white">
+      <div className="flex h-16 items-center px-4 max-w-4xl mx-auto">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <span className="font-bold text-xl">Bouquet Bliss</span> {/* Updated brand name */}
+          <span className="font-bold text-sm">Bouquet Bliss</span>
         </Link>
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link href="/" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Home
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Rose Bouquets</NavigationMenuTrigger>
+              <NavigationMenuTrigger>Rose</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                   <ListItem href="/category/rose-bouquets" title="All Rose Bouquets">
@@ -110,13 +103,6 @@ export function Navbar() {
                   </ListItem>
                 </ul>
               </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/contact" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Contact
-                </NavigationMenuLink>
-              </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/about" legacyBehavior passHref>
@@ -189,7 +175,7 @@ export function Navbar() {
                     <div className="border-t pt-4">
                       <div className="flex justify-between mb-4">
                         <span>Subtotal</span>
-                        <span>₹{totalPrice.toLocaleString()}</span>
+                        <span>रु{totalPrice.toLocaleString()}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         <Button asChild variant="outline">
