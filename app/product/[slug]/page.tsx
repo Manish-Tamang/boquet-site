@@ -9,6 +9,7 @@ import { useCart } from "@/context/cart-context";
 import { SanityProduct, SanitySize, SanityVariant } from "@/types";
 import { bouquetBySlugQuery } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
+import { ProductPageSkeleton } from "@/components/ProductPageSkeleton";
 
 export default function ProductPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -53,13 +54,13 @@ export default function ProductPage() {
       price: product.price,
       image: (product.images?.[0] as any)?.asset?.url ?? "",
       quantity,
-      variant: selectedVariant?.name ?? "",
+      variant: typeof selectedVariant === "string" ? selectedVariant : selectedVariant?.name ?? "",
       size: typeof selectedSize === "string" ? selectedSize : selectedSize?.name ?? "",
     });
   };
 
   if (loading) {
-    return <div>Loading bouquet...</div>;
+    return <ProductPageSkeleton />;
   }
 
   if (error) {
@@ -71,36 +72,36 @@ export default function ProductPage() {
   }
 
   return (
-    <div className="max-w-[1024px] mx-auto px-2 py-4"> { }
-      <div className="grid md:grid-cols-2 gap-4"> { }
+    <div className="max-w-[1024px] mx-auto px-2 py-4">
+      <div className="grid md:grid-cols-2 gap-4">
         <ProductGallery images={product.images ?? []} name={product.name} />
 
-        <div className="space-y-3"> { }
-          <h1 className="text-2xl font-bold">{product.name}</h1> { }
-          <p className="text-xl font-bold">₹{product.price.toLocaleString()}</p> { }
-          <p className="text-xs text-muted-foreground">Shipping calculated at checkout</p> { }
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold">{product.name}</h1>
+          <p className="text-xl font-bold">रु{product.price.toLocaleString()}</p>
+          <p className="text-xs text-muted-foreground">Shipping calculated at checkout</p>
 
-          <div className="space-y-2"> { }
+          <div className="space-y-2">
             <div>
-              <h3 className="font-medium mb-1 text-sm">Variant</h3> { }
-              <div className="flex flex-wrap gap-1"> { }
+              <h3 className="font-medium mb-1 text-sm">Variant</h3>
+              <div className="flex flex-wrap gap-1">
                 {product.variants?.map((variant) => (
                   <Button
-                    key={variant._id}
+                    key={variant.toString()}
                     type="button"
-                    variant={selectedVariant?._id === variant._id ? "default" : "outline"}
+                    variant={selectedVariant === variant ? "default" : "outline"}
                     className="rounded-md text-xs px-2 py-1"
                     onClick={() => setSelectedVariant(variant)}
                   >
-                    {variant}
+                    {variant.toString()} { }
                   </Button>
-                )) ?? <p className="text-xs">No variants</p>} { }
+                )) ?? <p className="text-xs">No variants</p>}
               </div>
             </div>
 
             <div>
-              <h3 className="font-medium mb-1 text-sm">Size</h3> { }
-              <div className="flex flex-wrap gap-1"> { }
+              <h3 className="font-medium mb-1 text-sm">Size</h3>
+              <div className="flex flex-wrap gap-1">
                 {product.sizes?.map((size) => (
                   <Button
                     key={size.toString()}
@@ -111,11 +112,11 @@ export default function ProductPage() {
                   >
                     {size.toString()}
                   </Button>
-                )) ?? <p className="text-xs">No sizes</p>} { }
+                )) ?? <p className="text-xs">No sizes</p>}
               </div>
             </div>
 
-            <div className="flex items-center gap-2"> { }
+            <div className="flex items-center gap-2">
               <div className="flex items-center border rounded-md">
                 <Button
                   variant="ghost"
@@ -124,33 +125,33 @@ export default function ProductPage() {
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   disabled={quantity <= 1}
                 >
-                  <Minus className="h-3 w-3" /> { }
+                  <Minus className="h-3 w-3" />
                 </Button>
-                <span className="w-8 text-center text-sm">{quantity}</span> { }
+                <span className="w-8 text-center text-sm">{quantity}</span>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 rounded-none p-1"
                   onClick={() => setQuantity(quantity + 1)}
                 >
-                  <Plus className="h-3 w-3" /> { }
+                  <Plus className="h-3 w-3" />
                 </Button>
               </div>
 
-              <Button className="flex-1 text-sm" size="sm" onClick={handleAddToCart}> { }
+              <Button className="flex-1 text-sm" size="sm" onClick={handleAddToCart}>
                 Add to cart
               </Button>
             </div>
           </div>
 
-          <div className="pt-3 border-t"> { }
-            <h3 className="font-medium mb-1 text-sm">Description</h3> { }
-            <p className="text-xs text-muted-foreground">{product.description ?? "No description"}</p> { }
+          <div className="pt-3 border-t">
+            <h3 className="font-medium mb-1 text-sm">Description</h3>
+            <p className="text-xs text-muted-foreground">{product.description ?? "No description"}</p>
           </div>
 
-          <div className="pt-3 border-t"> { }
-            <h3 className="font-medium mb-1 text-sm">Details</h3> { }
-            <p className="text-xs text-muted-foreground">{product.arrangementDetails ?? "No details"}</p> { }
+          <div className="pt-3 border-t">
+            <h3 className="font-medium mb-1 text-sm">Details</h3>
+            <p className="text-xs text-muted-foreground">{product.arrangementDetails ?? "No details"}</p>
           </div>
         </div>
       </div>
