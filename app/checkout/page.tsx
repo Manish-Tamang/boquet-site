@@ -342,9 +342,9 @@ export default function CheckoutPage() {
                   </p>
                   <div className="flex justify-between mt-1">
                     <p className="text-sm">
-                      ₹{item.price.toLocaleString()} × {item.quantity}
+                      रु{item.price.toLocaleString()} × {item.quantity}
                     </p>
-                    <p className="font-medium">₹{(item.price * item.quantity).toLocaleString()}</p>
+                    <p className="font-medium">रु{(item.price * item.quantity).toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -354,21 +354,21 @@ export default function CheckoutPage() {
           <div className="space-y-2 pt-4 border-t">
             <div className="flex justify-between">
               <span>Sub-total</span>
-              <span>₹{totalPrice.toLocaleString()}</span>
+              <span>रु{totalPrice.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span>Delivery Charge</span>
-              <span>₹{deliveryCharge}</span>
+              <span>रु{deliveryCharge}</span>
             </div>
             {discount > 0 && (
               <div className="flex justify-between text-green-600">
                 <span>Discount</span>
-                <span>-₹{discount.toLocaleString()}</span>
+                <span>-रु{discount.toLocaleString()}</span>
               </div>
             )}
             <div className="flex justify-between font-bold pt-2 border-t">
               <span>Total</span>
-              <span>₹{finalTotal.toLocaleString()}</span>
+              <span>रु{finalTotal.toLocaleString()}</span>
             </div>
           </div>
 
