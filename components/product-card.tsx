@@ -21,7 +21,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
       <div className="mt-3">
         <h3 className="font-medium text-sm">{product.name}</h3>
-        <p className="mt-1 font-medium">₹{product.price.toLocaleString()}</p>
+        <p className="mt-1 font-medium">रु{product.price.toLocaleString()}</p>
       </div>
     </Link>
   );
