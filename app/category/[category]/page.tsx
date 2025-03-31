@@ -9,6 +9,8 @@ import { useState, useEffect } from "react";
 import { SanityProduct } from "@/types";
 import { bouquetQuery } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
+import { ProductCardSkeleton } from "@/components/ProductCardSkeleton"; // Import the ProductCardSkeleton component
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CategoryPage() {
   const params = useParams();
@@ -74,7 +76,44 @@ export default function CategoryPage() {
   };
 
   if (loading) {
-    return <div className="max-w-[1280px] mx-auto px-4 py-8">Loading bouquets...</div>;
+    return (
+      <div className="max-w-[1280px] mx-auto px-4 py-8">
+        <div className="grid md:grid-cols-[250px_1fr] gap-8">
+          <div className="space-y-6">
+            <div>
+              <h3 className="font-medium mb-4"><Skeleton className="h-6 w-32 bg-gray-200"/></h3>
+              <div className="space-y-2">
+                {/* Skeleton for the checkboxes */}
+                {Array(3).fill(null).map((_, i) => (
+                  <div key={i} className="flex items-center space-x-2">
+                    <Skeleton className="h-4 w-4" />
+                    <Skeleton className="h-4 w-24 bg-gray-200" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-medium mb-4"><Skeleton className="h-6 w-32 bg-gray-200"/></h3>
+              <div className="grid grid-cols-2 gap-4">
+                {/* Skeleton for the price range buttons */}
+                {Array(4).fill(null).map((_, i) => (
+                  <Skeleton key={i} className="h-8 w-32 bg-gray-200" />
+                ))}
+              </div>
+            </div>
+          </div>
+          <div>
+            {/* Skeleton for the product cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array(6).fill(null).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
