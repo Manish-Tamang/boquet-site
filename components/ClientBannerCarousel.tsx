@@ -17,7 +17,7 @@ const ClientBannerCarousel: React.FC<BannerCarouselProps> = ({ slides }) => {
     const [plugin] = React.useState(() => Autoplay({ delay: 5000, stopOnInteraction: false }));
 
     return (
-        <div className="w-full flex justify-center overflow-hidden bg-muted">
+        <div className="w-full flex justify-center overflow-hidden bg-muted rounded-md">
             <div className="w-[1280px]">
                 <Carousel
                     plugins={[plugin]}
@@ -35,12 +35,12 @@ const ClientBannerCarousel: React.FC<BannerCarouselProps> = ({ slides }) => {
                                         src={urlFor(slide.image).url() || "/placeholder.svg"}
                                         alt={slide.title}
                                         fill
-                                        className="object-cover"
+                                        className="object-cover rounded-md"
                                         priority={index === 0}
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     />
                                     { }
-                                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                    <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
                                         { }
                                         <div className="container mx-auto px-4 text-center">
                                             { }
