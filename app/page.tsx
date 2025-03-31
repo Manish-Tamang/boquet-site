@@ -24,7 +24,7 @@ export default function Home() {
         const data = await client.fetch<SanityProduct[]>(bouquetQuery);
         setFeaturedBouquets(data.filter(bouquet => bouquet.featured));
         setRoseBouquets(data.filter(bouquet => bouquet.bouquetCategory?.name === "Rose Bouquets"));
-        setSunflowerBouquets(data.filter(bouquet => bouquet.bouquetCategory?.name === "Sunflower Bouquets"));
+        setSunflowerBouquets(data.filter(bouquet => bouquet.bouquetCategory?.name === "Blue Cherry Buquets"));
       } catch (err: any) {
         setError(err.message || "Failed to fetch bouquets.");
       } finally {
@@ -69,17 +69,16 @@ export default function Home() {
               ))}
           </div>
         </section>
-
         <section className="py-8">
           <div className="flex justify-between mb-6">
             <h2 className="text-xl font-bold">Sunflower Arrangements</h2>
-            <Link href="/category/sunflower-bouquets?collection=summer" className="text-sm underline">
+            <Link href="/category/sunflower-bouquets?collection=winter" className="text-sm underline">
               View All
             </Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {sunflowerBouquets
-              .filter(p => p.seasonalCollection?.name === "Summer")
+              .filter(p => p.seasonalCollection?.name === "Winter")
               .slice(0, 4)
               .map(bouquet => (
                 <ProductCard key={bouquet._id} product={bouquet} />
