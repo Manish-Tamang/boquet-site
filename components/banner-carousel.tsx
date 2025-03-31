@@ -34,14 +34,12 @@ export function BannerCarousel() {
     return (
       <div className="w-full flex justify-center overflow-hidden bg-muted">
         <div className="relative aspect-[2.5/1] w-[1280px] overflow-hidden">
-          <Skeleton className="w-full h-full" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-background/20">
-            <div className="container h-full mx-auto px-4 flex items-center">
-              <div className="max-w-lg space-y-2">
-                <Skeleton className="h-8 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-                <Skeleton className="h-8 w-1/4" />
-              </div>
+          <Skeleton className="w-full h-full bg-gray-200 opacity-80" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center space-y-4">
+              <Skeleton className="h-10 w-64 mx-auto bg-gray-300" />
+              <Skeleton className="h-4 w-16 mx-auto bg-gray-300" />
+              <Skeleton className="h-8 w-32 mx-auto bg-gray-300 rounded-md" />
             </div>
           </div>
         </div>
