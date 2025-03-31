@@ -158,7 +158,7 @@ export function Navbar() {
                       <ShoppingCart className="h-12 w-12 mx-auto text-muted-foreground" />
                       <p className="mt-2">Your cart is empty</p>
                       <Link href="/">
-                        <Button className="mt-4 bg-[#FC819E] hover:bg-[#E90074]">Continue Shopping</Button>
+                        <Button className="mt-4">Continue Shopping</Button>
                       </Link>
                     </div>
                   </div>
@@ -181,7 +181,7 @@ export function Navbar() {
                         <Button asChild variant="outline">
                           <Link href="/cart">View Cart</Link>
                         </Button>
-                        <Button asChild className="bg-[#FC819E] hover:bg-[#E90074] ">
+                        <Button asChild>
                           <Link href="/checkout">Checkout</Link>
                         </Button>
                       </div>
