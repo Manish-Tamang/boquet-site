@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useCart } from "@/context/cart-context"
 import { useRouter } from "next/navigation"
+import { urlFor } from "@/sanity/lib/image"
 
 export default function CheckoutPage() {
   const { cart, totalPrice, clearCart } = useCart()
@@ -29,7 +30,7 @@ export default function CheckoutPage() {
     address: "",
     landmark: "",
   })
-
+// Removed the misplaced imageUrl declaration
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -327,28 +328,31 @@ export default function CheckoutPage() {
           <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
 
           <div className="space-y-4 mb-6">
-            {cart.map((item, index) => (
-              <div key={`${item.id}-${item.variant}-${item.size}`} className="flex gap-4">
-                <div className="relative w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0">
-                  <div className="absolute top-0 left-0 w-6 h-6 bg-primary text-primary-foreground text-xs flex items-center justify-center rounded-br-md">
-                    {index + 1}
+            {cart.map((item, index) => {
+              const imageUrl = item.images?.length > 0 ? urlFor(item.images[0]).url() : "/placeholder.svg";
+              return (
+                <div key={`${item.id}-${item.variant}-${item.size}`} className="flex gap-4">
+                  <div className="relative w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0">
+                    <div className="absolute top-0 left-0 w-6 h-6 bg-primary text-primary-foreground text-xs flex items-center justify-center rounded-br-md">
+                      {index + 1}
+                    </div>
+                    <Image src={imageUrl} alt={item.name} fill className="object-cover" />
                   </div>
-                  <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-medium">{item.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Variant: {item.variant}/{item.size}
-                  </p>
-                  <div className="flex justify-between mt-1">
-                    <p className="text-sm">
-                      रु{item.price.toLocaleString()} × {item.quantity}
+                  <div className="flex-1">
+                    <h3 className="font-medium">{item.name}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Variant: {item.variant}/{item.size}
                     </p>
-                    <p className="font-medium">रु{(item.price * item.quantity).toLocaleString()}</p>
+                    <div className="flex justify-between mt-1">
+                      <p className="text-sm">
+                        रु{item.price.toLocaleString()} × {item.quantity}
+                      </p>
+                      <p className="font-medium">रु{(item.price * item.quantity).toLocaleString()}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="space-y-2 pt-4 border-t">
