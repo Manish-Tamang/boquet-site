@@ -1,6 +1,7 @@
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 export interface CartItemType {
+  [x: string]: any;
   id: string;
   name: string;
   price: number;
