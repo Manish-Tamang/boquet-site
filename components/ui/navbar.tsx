@@ -35,7 +35,7 @@ export function Navbar() {
             <NavigationMenuItem>
               <NavigationMenuTrigger>Rose</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[300px] md:grid-cols-2 lg:w-[450px]">
                   <ListItem href="/category/rose-bouquets" title="All Rose Bouquets">
                     Browse our complete collection of rose bouquets
                   </ListItem>
@@ -63,7 +63,7 @@ export function Navbar() {
             <NavigationMenuItem>
               <NavigationMenuTrigger>Sunflower Arrangements</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[300px] md:grid-cols-2 lg:w-[450px]">
                   <ListItem href="/category/sunflower-bouquets" title="All Sunflower Arrangements">
                     Explore our sunny sunflower bouquet collection
                   </ListItem>
@@ -91,7 +91,7 @@ export function Navbar() {
             <NavigationMenuItem>
               <NavigationMenuTrigger>Gift Add-Ons</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[300px] md:grid-cols-2 lg:w-[450px]">
                   <ListItem href="/category/add-ons" title="All Gift Add-Ons">
                     Enhance your bouquet with our add-ons
                   </ListItem>
