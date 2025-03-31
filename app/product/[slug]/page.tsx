@@ -52,10 +52,11 @@ export default function ProductPage() {
       id: product._id,
       name: product.name,
       price: product.price,
-      image: (product.images?.[0] as any)?.asset?.url ?? "",
+      images: product.images ?? [], 
       quantity,
       variant: typeof selectedVariant === "string" ? selectedVariant : selectedVariant?.name ?? "",
       size: typeof selectedSize === "string" ? selectedSize : selectedSize?.name ?? "",
+      image: ""
     });
   };
 
@@ -93,7 +94,7 @@ export default function ProductPage() {
                     className="rounded-md text-xs px-2 py-1"
                     onClick={() => setSelectedVariant(variant)}
                   >
-                    {variant.toString()} { }
+                    {variant.toString()}
                   </Button>
                 )) ?? <p className="text-xs">No variants</p>}
               </div>
