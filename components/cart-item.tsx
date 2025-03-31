@@ -3,6 +3,7 @@ import { Minus, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/context/cart-context"
 import type { CartItemType } from "@/types"
+import { urlFor } from "@/sanity/lib/image"
 
 interface CartItemProps {
   item: CartItemType
@@ -10,12 +11,12 @@ interface CartItemProps {
 
 export function CartItem({ item }: CartItemProps) {
   const { updateQuantity, removeFromCart } = useCart()
-
+  const imageUrl = item.images?.length > 0 ? urlFor(item.images[0]).url() : "/placeholder.svg";
   return (
     <div className="flex py-4 border-b">
       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border">
         <Image
-          src={item.image || "/placeholder.svg"}
+          src={imageUrl}
           alt={item.name}
           width={100}
           height={100}
