@@ -17,7 +17,7 @@ import { urlFor } from "@/sanity/lib/image"
 export default function CheckoutPage() {
   const { cart, totalPrice, clearCart } = useCart()
   const router = useRouter()
-  const [paymentMethod, setPaymentMethod] = useState<"qr" | "card">("qr")
+  const [paymentMethod, setPaymentMethod] = useState<"esewa">("esewa")
   const [promoCode, setPromoCode] = useState("")
   const [isApplying, setIsApplying] = useState(false)
   const [discount, setDiscount] = useState(0)
@@ -30,7 +30,6 @@ export default function CheckoutPage() {
     address: "",
     landmark: "",
   })
-// Removed the misplaced imageUrl declaration
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -94,19 +93,60 @@ export default function CheckoutPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!validateForm()) return
-
-    setIsSubmitting(true)
-
-    // Simulate order processing
-    setTimeout(() => {
-      clearCart()
-      router.push("/checkout/success")
-    }, 2000)
-  }
+  const handlePaymentGateway = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!validateForm()) return;
+    setIsSubmitting(true);
+    try {
+      const transactionId = `ORDER-${Date.now()}`;
+      const productName = cart.map((item) => item.name).join(", ");
+      const res = await fetch("/api/initiate-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          method: paymentMethod,
+          amount: finalTotal.toString(),
+          productName,
+          transactionId,
+        }),
+      });
+      if (!res.ok) throw new Error("Payment initiation failed");
+      const data = await res.json();
+      if (paymentMethod === "esewa") {
+        // Build and submit the eSewa form
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
+        const esewaPayload = {
+          amount: data.amount,
+          tax_amount: data.esewaConfig.tax_amount,
+          total_amount: data.esewaConfig.total_amount,
+          transaction_uuid: data.esewaConfig.transaction_uuid,
+          product_code: data.esewaConfig.product_code,
+          product_service_charge: data.esewaConfig.product_service_charge,
+          product_delivery_charge: data.esewaConfig.product_delivery_charge,
+          success_url: data.esewaConfig.success_url,
+          failure_url: data.esewaConfig.failure_url,
+          signed_field_names: data.esewaConfig.signed_field_names,
+          signature: data.esewaConfig.signature,
+        };
+        Object.entries(esewaPayload).forEach(([key, value]) => {
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = key;
+          input.value = String(value);
+          form.appendChild(input);
+        });
+                document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+      }
+    } catch (err) {
+      alert("Payment initiation failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   if (cart.length === 0) {
     return (
@@ -135,7 +175,7 @@ export default function CheckoutPage() {
       </div>
 
       <div className="grid md:grid-cols-[1fr_400px] gap-8">
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handlePaymentGateway} className="space-y-8">
           {/* General Information */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">1. General Information</h2>
@@ -248,75 +288,11 @@ export default function CheckoutPage() {
           {/* Payment Methods */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">3. Payment Methods</h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div
-                className={`border rounded-lg p-4 cursor-pointer ${
-                  paymentMethod === "qr" ? "border-primary ring-1 ring-primary" : ""
-                }`}
-                onClick={() => setPaymentMethod("qr")}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 flex items-center justify-center bg-muted rounded-md">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <rect width="6" height="6" x="3" y="3" rx="1" />
-                        <path d="M21 8v1a1 1 0 0 1-1 1h-1" />
-                        <path d="M8 6h1" />
-                        <path d="M15 3h1a3 3 0 0 1 3 3v1" />
-                        <path d="M3 15v1a3 3 0 0 0 3 3h1" />
-                        <rect width="6" height="6" x="15" y="15" rx="1" />
-                        <path d="M21 11v4" />
-                        <path d="M8 18h4" />
-                        <path d="M6 11h4" />
-                        <path d="M11 11h1" />
-                        <path d="M15 11h1" />
-                        <path d="M11 15v1" />
-                      </svg>
-                    </div>
-                    <span className="font-medium">QR Payment</span>
-                  </div>
-                  {paymentMethod === "qr" && (
-                    <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-                      <Check className="h-3 w-3" />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div
-                className={`border rounded-lg p-4 cursor-pointer ${
-                  paymentMethod === "card" ? "border-primary ring-1 ring-primary" : ""
-                }`}
-                onClick={() => setPaymentMethod("card")}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 flex items-center justify-center bg-muted rounded-md">
-                      <div className="flex flex-col items-center">
-                        <div className="flex">
-                          <div className="w-6 h-4 bg-blue-600 rounded-sm"></div>
-                          <div className="w-6 h-4 bg-red-500 rounded-sm -ml-3"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="font-medium">Visa/Mastercard</span>
-                  </div>
-                  {paymentMethod === "card" && (
-                    <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-                      <Check className="h-3 w-3" />
-                    </div>
-                  )}
+            <div className="border rounded-lg p-4 bg-muted/30">
+              <div className="flex items-center justify-between">
+                <span className="font-medium">eSewa</span>
+                <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+                  <Check className="h-3 w-3" />
                 </div>
               </div>
             </div>
@@ -389,8 +365,8 @@ export default function CheckoutPage() {
               </Button>
             </div>
 
-            <Button className="w-full" size="lg" onClick={handleSubmit} disabled={isSubmitting}>
-              {isSubmitting ? "Processing..." : "Place Order"}
+            <Button className="w-full" size="lg" onClick={handlePaymentGateway} disabled={isSubmitting}>
+              {isSubmitting ? "Processing..." : "Pay with eSewa"}
             </Button>
           </div>
         </div>
