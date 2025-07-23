@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { SanityProduct } from "@/types";
 import { bouquetQuery } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
-import { ProductCardSkeleton } from "@/components/ProductCardSkeleton"; // Import the ProductCardSkeleton component
+import { ProductCardSkeleton } from "@/components/ProductCardSkeleton"; 
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CategoryPage() {
@@ -24,7 +24,7 @@ export default function CategoryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch bouquets from Sanity
+  
   useEffect(() => {
     const fetchBouquets = async () => {
       setLoading(true);
@@ -42,16 +42,16 @@ export default function CategoryPage() {
     fetchBouquets();
   }, []);
 
-  // Filter bouquets based on category and collection
+  
   useEffect(() => {
     let result = allBouquets;
 
-    // Filter by category
+    
     if (category !== "all") {
       result = result.filter((bouquet) => bouquet.bouquetCategory?.name.toLowerCase().replace(" ", "-") === category);
     }
 
-    // Filter by collection
+    
     if (collections.length > 0) {
       result = result.filter((bouquet) => collections.includes(bouquet.seasonalCollection?.name || ""));
     }
@@ -59,13 +59,13 @@ export default function CategoryPage() {
     setFilteredBouquets(result);
   }, [category, collections, allBouquets]);
 
-  // Get unique collections for the current category
+  
   const availableCollections = [
     ...new Set(
       allBouquets
         .filter((b) => category === "all" || b.bouquetCategory?.name.toLowerCase().replace(" ", "-") === category)
         .map((b) => b.seasonalCollection?.name)
-        .filter(Boolean) // Remove null/undefined
+        .filter(Boolean) 
     ),
   ] as string[];
 
@@ -83,7 +83,7 @@ export default function CategoryPage() {
             <div>
               <h3 className="font-medium mb-4"><Skeleton className="h-6 w-32 bg-gray-200"/></h3>
               <div className="space-y-2">
-                {/* Skeleton for the checkboxes */}
+                {}
                 {Array(3).fill(null).map((_, i) => (
                   <div key={i} className="flex items-center space-x-2">
                     <Skeleton className="h-4 w-4" />
@@ -96,7 +96,7 @@ export default function CategoryPage() {
             <div>
               <h3 className="font-medium mb-4"><Skeleton className="h-6 w-32 bg-gray-200"/></h3>
               <div className="grid grid-cols-2 gap-4">
-                {/* Skeleton for the price range buttons */}
+                {}
                 {Array(4).fill(null).map((_, i) => (
                   <Skeleton key={i} className="h-8 w-32 bg-gray-200" />
                 ))}
@@ -104,7 +104,7 @@ export default function CategoryPage() {
             </div>
           </div>
           <div>
-            {/* Skeleton for the product cards */}
+            {}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array(6).fill(null).map((_, i) => (
                 <ProductCardSkeleton key={i} />
