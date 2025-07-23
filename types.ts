@@ -12,7 +12,6 @@ export interface CartItemType {
 }
 
 export interface SanityProduct {
-  [x: string]: string;
   bouquetCategory: any;
   seasonalCollection: any;
   _id: string;
@@ -42,7 +41,6 @@ export interface SanityCollection {
 }
 
 export interface SanityVariant {
-  [x: string]: Key | null | undefined;
   name: string;
   inStock: boolean;
 }
@@ -64,4 +62,13 @@ export interface SanitySiteSettings {
   siteName: string;
   logo: SanityImageSource;
   footerText: string;
+}
+
+export type PaymentMethod = "esewa" | "khalti";
+
+export interface PaymentRequestData {
+  amount: string;
+  productName: string;
+  transactionId: string;
+  method: PaymentMethod;
 }
