@@ -290,7 +290,9 @@ export default function CheckoutPage() {
             <h2 className="text-xl font-semibold">3. Payment Methods</h2>
             <div className="border rounded-lg p-4 bg-muted/30">
               <div className="flex items-center justify-between">
-                <span className="font-medium">eSewa</span>
+                <span className="font-medium">
+                  <img src="/logo/esewa.svg" alt="eSewa" draggable={false} style={{ userSelect: "none" }} className="h-10 w-auto" />
+                </span>
                 <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
                   <Check className="h-3 w-3" />
                 </div>
@@ -365,9 +367,11 @@ export default function CheckoutPage() {
               </Button>
             </div>
 
-            <Button className="w-full" size="lg" onClick={handlePaymentGateway} disabled={isSubmitting}>
-              {isSubmitting ? "Processing..." : "Pay with eSewa"}
-            </Button>
+            <div className="flex justify-center">
+              <Button className="px-6" size="lg" onClick={handlePaymentGateway} disabled={isSubmitting}>
+                {isSubmitting ? "Processing..." : "Pay with eSewa"}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
