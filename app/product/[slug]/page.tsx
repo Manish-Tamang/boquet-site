@@ -74,85 +74,86 @@ export default function ProductPage() {
 
   return (
     <div className="max-w-[1024px] mx-auto px-2 py-4">
-      <div className="grid md:grid-cols-2 gap-4">
-        <ProductGallery images={product.images ?? []} name={product.name} />
+      <div className="grid md:grid-cols-[5fr_7fr] gap-8 items-start">
+        <div className="max-w-[350px] mx-auto w-full">
+          <ProductGallery images={product.images ?? []} name={product.name} />
+        </div>
+        <div className="bg-white/80 rounded-xl shadow p-8 space-y-6">
+          <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+          <p className="text-2xl font-bold text-primary mb-1">रु{product.price.toLocaleString()}</p>
+          <p className="text-sm text-muted-foreground mb-4">Shipping calculated at checkout</p>
 
-        <div className="space-y-3">
-          <h1 className="text-2xl font-bold">{product.name}</h1>
-          <p className="text-xl font-bold">रु{product.price.toLocaleString()}</p>
-          <p className="text-xs text-muted-foreground">Shipping calculated at checkout</p>
-
-          <div className="space-y-2">
+          <div className="space-y-4">
             <div>
-              <h3 className="font-medium mb-1 text-sm">Variant</h3>
-              <div className="flex flex-wrap gap-1">
+              <h3 className="font-semibold mb-2 text-base">Variant</h3>
+              <div className="flex flex-wrap gap-2">
                 {product.variants?.map((variant) => (
                   <Button
                     key={variant.toString()}
                     type="button"
                     variant={selectedVariant === variant ? "default" : "outline"}
-                    className="rounded-md text-xs px-2 py-1"
+                    className="rounded-md text-sm px-3 py-1"
                     onClick={() => setSelectedVariant(variant)}
                   >
                     {variant.toString()}
                   </Button>
-                )) ?? <p className="text-xs">No variants</p>}
+                )) ?? <p className="text-sm">No variants</p>}
               </div>
             </div>
 
             <div>
-              <h3 className="font-medium mb-1 text-sm">Size</h3>
-              <div className="flex flex-wrap gap-1">
+              <h3 className="font-semibold mb-2 text-base">Size</h3>
+              <div className="flex flex-wrap gap-2">
                 {product.sizes?.map((size) => (
                   <Button
                     key={size.toString()}
                     type="button"
                     variant={selectedSize === size ? "default" : "outline"}
-                    className="rounded-md w-8 text-xs px-1 py-0.5"
+                    className="rounded-md w-10 text-sm px-2 py-1"
                     onClick={() => setSelectedSize(size)}
                   >
                     {size.toString()}
                   </Button>
-                )) ?? <p className="text-xs">No sizes</p>}
+                )) ?? <p className="text-sm">No sizes</p>}
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <div className="flex items-center border rounded-md">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 rounded-none p-1"
+                  className="h-9 w-9 rounded-none p-1"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   disabled={quantity <= 1}
                 >
-                  <Minus className="h-3 w-3" />
+                  <Minus className="h-4 w-4" />
                 </Button>
-                <span className="w-8 text-center text-sm">{quantity}</span>
+                <span className="w-10 text-center text-base">{quantity}</span>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 rounded-none p-1"
+                  className="h-9 w-9 rounded-none p-1"
                   onClick={() => setQuantity(quantity + 1)}
                 >
-                  <Plus className="h-3 w-3" />
+                  <Plus className="h-4 w-4" />
                 </Button>
               </div>
 
-              <Button className="flex-1 text-sm" size="sm" onClick={handleAddToCart}>
+              <Button size="lg" className="flex-1 text-base" onClick={handleAddToCart}>
                 Add to cart
               </Button>
             </div>
           </div>
 
-          <div className="pt-3 border-t">
-            <h3 className="font-medium mb-1 text-sm">Description</h3>
-            <p className="text-xs text-muted-foreground">{product.description ?? "No description"}</p>
+          <div className="pt-5 border-t">
+            <h3 className="font-semibold mb-2 text-base">Description</h3>
+            <p className="text-sm text-muted-foreground">{product.description ?? "No description"}</p>
           </div>
 
-          <div className="pt-3 border-t">
-            <h3 className="font-medium mb-1 text-sm">Details</h3>
-            <p className="text-xs text-muted-foreground">{product.arrangementDetails ?? "No details"}</p>
+          <div className="pt-5 border-t">
+            <h3 className="font-semibold mb-2 text-base">Details</h3>
+            <p className="text-sm text-muted-foreground">{product.arrangementDetails ?? "No details"}</p>
           </div>
         </div>
       </div>
