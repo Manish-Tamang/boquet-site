@@ -26,6 +26,7 @@ export interface SanityProduct {
   variants: SanityVariant[];
   sizes: SanitySize[];
   featured: boolean;
+  arrangementDetails?: string;
 }
 
 export interface SanityCategory {
