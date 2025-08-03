@@ -1,12 +1,12 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Karla } from "next/font/google"
+import { Poppins } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/ui/navbar"
 import { Footer } from "@/components/ui/footer"
 import { CartProvider } from "@/context/cart-context"
 
-const karla = Karla({
+const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   display: "swap"
@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={karla.className}>
+      <body className={poppins.className}>
         <CartProvider>
           <div className="flex min-h-screen flex-col">
             <Navbar />
