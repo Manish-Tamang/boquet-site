@@ -182,4 +182,4 @@ Your support helps motivate me to continue building and improving this project. 
 
 ---
 
-**Made with ❤️ for beautiful flower arrangements**
+**Made with ❤️ by Manish Tamang**
