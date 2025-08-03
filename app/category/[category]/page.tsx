@@ -125,8 +125,8 @@ export default function CategoryPage() {
       <h1 className="text-3xl font-bold mb-8 capitalize">
         {category === "all" ? "All Bouquets" : category.replace("-", " ")}
       </h1>
-      <div className="grid md:grid-cols-[250px_1fr] gap-8">
-        <div className="space-y-6">
+      <div className="grid md:grid-cols-[250px_1fr] gap-8 min-h-screen items-start">
+        <aside className="space-y-6 sticky top-24 h-fit self-start">
           <div>
             <h3 className="font-medium mb-4">Collections</h3>
             <div className="space-y-2">
@@ -190,10 +190,10 @@ export default function CategoryPage() {
               </Button>
             </div>
           </div>
-        </div>
-        <div>
+        </aside>
+        <main className="min-h-[400px]">
           {filteredBouquets.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:col-span-3 py-12 text-center">
               <h3 className="text-lg font-medium">No bouquets found</h3>
               <p className="text-muted-foreground mt-2">
                 Try adjusting your filters or check back later.
@@ -206,7 +206,7 @@ export default function CategoryPage() {
               ))}
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );
